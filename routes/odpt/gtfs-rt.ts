@@ -3,7 +3,7 @@ import { sift, GtfsRealtimeBindings } from "../../deps.ts";
 const apikey = Deno.env.get("ODPT_TC_KEY");
 
 const availableOperators = new Map([
-  ["vehicle_position", ["tobus", "seibubus", "hamabus"]],
+  ["vehicle", ["tobus", "seibubus", "hamabus"]],
   ["trip_update", ["seibubus", "hamabus"]],
   ["alert", ["hamabus"]],
 ]);
@@ -23,7 +23,7 @@ export const odptGtfsRtHandler: sift.Handler = async (req, params) => {
   switch (dataType) {
     case "alert":
     case "trip_update":
-    case "vehicle_position": {
+    case "vehicle": {
       const isAvailable = availableOperators.get(dataType)!.includes(operator);
       if (!isAvailable) {
         return new Response(
