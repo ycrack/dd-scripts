@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["deno.ns", "DOM", "DOM.Iterable"],
+    "target": "esnext",
+  }
+}
