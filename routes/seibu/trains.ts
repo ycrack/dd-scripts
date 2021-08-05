@@ -98,14 +98,14 @@ export const seibuOdptTrains: sift.Handler = async (req, params) => {
             } else if (candidates.length === 0) {
               return;
             } else {
-              // @ts-ignore: type limitation too strict
-              return `odpt.Station:${master.odpt.line(currentLine)}.${master.odpt.station[edgeStation]}`;
+              return `odpt.Station:${master.odpt.line[currentLine]}.${master.odpt.station[edgeStation]}`;
             }
           } else {
-            // @ts-ignore: type limitation too strict
-            const lineGroupKey: string = master.line[currentLine].lineGroupId;
             const currentLineGroup = master.line.reduce((acc, line) => {
-              if (line.lineGroupId === lineGroupKey) {
+              if (
+                Object.keys(line).includes("lineGroupId")
+                && line.lineGroupId === master.line.find(l => l.lineId == currentLine)?.lineGroupId
+              ) {
                 acc.push(line.lineId);
               }
               return acc;
@@ -118,18 +118,17 @@ export const seibuOdptTrains: sift.Handler = async (req, params) => {
             } else if (candidates.length === 0) {
               return;
             } else {
-              // @ts-ignore: type limitation too strict
-              return `odpt.Station:${master.odpt.line(currentLine)}.${master.odpt.station[edgeStation]}`;
+              return `odpt.Station:${master.odpt.line[currentLine]}.${master.odpt.station[edgeStation]}`;
             }
           }
         }
 
         const line = master.odpt.line[tr.lineId];
         const type = master.odpt.trainType.get(Number(tr.trainType))!;
-        const owner = tr.carType === null ? null : master.odpt.trainOwner.get(tr.carType) || "Seibu";
+        const owner = tr.carType === null ? null : `odpt.Operator:${master.odpt.trainOwner.get(tr.carType) || "Seibu"}`;
 
-        const obj = {
-          "@id": `urn:uuid:${uuid.v4.generate()}`,
+        // deno-lint-ignore no-explicit-any
+        const obj: { [key: string]: any } = {
           "@type": "odpt:Train",
           "dc:date": dateFnsTz.format(
             dateFnsTz.utcToZonedTime(new Date(res.headers.get("date")!), 'Asia/Tokyo'),
@@ -137,12 +136,12 @@ export const seibuOdptTrains: sift.Handler = async (req, params) => {
             { timeZone: 'Asia/Tokyo' }
           ).split(" ").join("T"),
           "@context": "http://vocab.odpt.org/context_odpt.jsonld",
-          "owl:sameAs": `odpt.Train:Seibu.${line}.${tr.trainNo}`,
+          "owl:sameAs": `odpt.Train:${line}.${tr.trainNo}`,
           "odpt:operator": "odpt.Operator:Seibu",
           "odpt:railway": `odpt.Railway:${line}`,
           "odpt:railDirection": `odpt.RailDirection:${tr.direction === "up" ? "Outbound" : "Inbound"}`,
           "odpt:trainNumber": tr.trainNo,
-          "odpt:trainType": type,
+          "odpt:trainType": `odpt.TrainType:${type}`,
           "odpt:fromStation": tr.fromStationId === null ? null : convertStation(tr.lineId, tr.fromStationId),
           "odpt:toStation": tr.toStationId === null ? null : convertStation(tr.lineId, tr.toStationId),
           "odpt:originStation": [
@@ -151,19 +150,20 @@ export const seibuOdptTrains: sift.Handler = async (req, params) => {
           "odpt:destinationStation": [
             generateEdgeStation(tr.lineId, tr.destination)
           ],
-          "odpt:trainOwner": owner,
           "odpt:delay": tr.delay * 60,
           "odpt:carComposition": Number(tr.numberOfCars),
         };
 
+        if (owner) {
+          obj["odpt:trainOwner"] = owner;
+        }
+
         if (!tr.trainName?.match(/\d{1,4}列車/)) {
-          // @ts-ignore: add extra property
-          obj["odpt:trainName"] = [{ ja: tr.trainName }];
+          obj["odpt:trainName"] = { ja: tr.trainName };
         }
 
         if (tr.note) {
-          // @ts-ignore: add extra property
-          obj["odpt:note"] = [{ ja: tr.note }];
+          obj["odpt:note"] = { ja: tr.note.replace(/\n/g, " ") };
         }
 
         return obj;
