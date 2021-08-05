@@ -39,32 +39,32 @@ export const seibuTrains: sift.Handler = async (req, params) => {
 };
 
 export const seibuOdptTrains: sift.Handler = async (req, params) => {
-  const lineKeys: string[] = [];
+  const lineKeys = new Set<string>();
+
   switch (params.line) {
     case "ike":
     case "sin":
     case "tam":
-      lineKeys.concat(master.line.reduce((acc, line) => {
-        if (line.lineGroupId === params.line) acc.push(line.lineId);
-        return acc;
-      }, Array<string>()))
+      master.line.forEach(line => {
+        if (line.lineGroupId == params.line) lineKeys.add(line.lineId);
+      });
       break;
-    case "ikebukuro": lineKeys.push("L001"); break;
-    case "sayama":    lineKeys.push("L002"); break;
-    case "toshima":   lineKeys.push("L003"); break;
-    case "yurakucho": lineKeys.push("L005"); break;
-    case "chichibu":  lineKeys.push("L008"); break;
-    case "shinjuku":  lineKeys.push("L009"); break;
-    case "seibuen":   lineKeys.push("L010"); break;
-    case "haijima":   lineKeys.push("L011"); break;
-    case "kokubunji": lineKeys.push("L012"); break;
-    case "tamako":    lineKeys.push("L013"); break;
-    case "tamagawa":  lineKeys.push("L021"); break;
-    case "yamaguchi": lineKeys.push("L022"); break;
-    default: lineKeys.concat(["L001", "L002", "L003", "L004", "L005", "L006", "L007", "L008", "L009", "L010", "L011", "L012", "L013", "L021", "L022"]);
+    case "ikebukuro": lineKeys.add("L001"); break;
+    case "sayama":    lineKeys.add("L002"); break;
+    case "toshima":   lineKeys.add("L003"); break;
+    case "yurakucho": lineKeys.add("L005"); break;
+    case "chichibu":  lineKeys.add("L008"); break;
+    case "shinjuku":  lineKeys.add("L009"); break;
+    case "seibuen":   lineKeys.add("L010"); break;
+    case "haijima":   lineKeys.add("L011"); break;
+    case "kokubunji": lineKeys.add("L012"); break;
+    case "tamako":    lineKeys.add("L013"); break;
+    case "tamagawa":  lineKeys.add("L021"); break;
+    case "yamaguchi": lineKeys.add("L022"); break;
+    default: ["L001", "L002", "L003", "L004", "L005", "L006", "L007", "L008", "L009", "L010", "L011", "L012", "L013", "L021", "L022"].forEach(k => lineKeys.add(k));
   }
 
-  const res = await fetch(`https://train.seibuapp.jp/trainfo-api/ti/v1.0/trains?lineId=${lineKeys.join("+")}`);
+  const res = await fetch(`https://train.seibuapp.jp/trainfo-api/ti/v1.0/trains?lineId=${[...lineKeys.values()].join('+')}`);
   if (!res.ok) {
     return new Response(
       JSON.stringify({ status: 500, message: "Getting data failed." }),
