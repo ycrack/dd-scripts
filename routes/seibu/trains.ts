@@ -1,6 +1,43 @@
 import { sift, uuid, dateFnsTz } from "../../deps.ts";
 import { master, TrainsResponse } from "./constant.ts";
 
+export const seibuTrains: sift.Handler = async (req, params) => {
+  const lineKeys = new Set<string>();
+
+  switch (params.line) {
+    case "ike":
+    case "sin":
+    case "tam":
+      master.line.forEach(line => {
+        if (line.lineGroupId == params.line) lineKeys.add(line.lineId);
+      });
+      break;
+    case "ikebukuro": lineKeys.add("L001"); break;
+    case "sayama": lineKeys.add("L002"); break;
+    case "toshima": lineKeys.add("L003"); break;
+    case "yurakucho": lineKeys.add("L005"); break;
+    case "chichibu": lineKeys.add("L008"); break;
+    case "shinjuku": lineKeys.add("L009"); break;
+    case "seibuen": lineKeys.add("L010"); break;
+    case "haijima": lineKeys.add("L011"); break;
+    case "kokubunji": lineKeys.add("L012"); break;
+    case "tamako": lineKeys.add("L013"); break;
+    case "tamagawa": lineKeys.add("L021"); break;
+    case "yamaguchi": lineKeys.add("L022"); break;
+    default: ["L001", "L002", "L003", "L004", "L005", "L006", "L007", "L008", "L009", "L010", "L011", "L012", "L013", "L021", "L022"].forEach(k => lineKeys.add(k));
+  }
+
+  const res = await fetch(`https://train.seibuapp.jp/trainfo-api/ti/v1.0/trains?lineId=${[...lineKeys.values()].join('+')}&detail=1`);
+  if (!res.ok) {
+    return new Response(
+      JSON.stringify({ status: 500, message: "Getting data failed." }),
+      { status: 500, headers: { "content-type": "application/json; charset=UTF-8" } }
+    );
+  } else {
+    return sift.json(await res.json());
+  }
+};
+
 export const seibuOdptTrains: sift.Handler = async (req, params) => {
   const lineKeys: string[] = [];
   switch (params.line) {
