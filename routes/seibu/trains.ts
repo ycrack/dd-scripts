@@ -1,4 +1,4 @@
-import { sift, uuid, dateFnsTz } from "../../deps.ts";
+import { sift, dateFnsTz } from "../../deps.ts";
 import { master, TrainsResponse } from "./constant.ts";
 
 export const seibuTrains: sift.Handler = async (req, params) => {
@@ -129,6 +129,7 @@ export const seibuOdptTrains: sift.Handler = async (req, params) => {
 
         // deno-lint-ignore no-explicit-any
         const obj: { [key: string]: any } = {
+          "@id": `urn:uuid:${crypto.randomUUID()}`,
           "@type": "odpt:Train",
           "dc:date": dateFnsTz.format(
             dateFnsTz.utcToZonedTime(new Date(res.headers.get("date")!), 'Asia/Tokyo'),
