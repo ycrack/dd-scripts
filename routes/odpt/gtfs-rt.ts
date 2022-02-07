@@ -15,7 +15,7 @@ const odptOperators = new Map([
   ["hamabus", "YokohamaMunicipalBus"],
 ]);
 
-const decodePB = (data: ArrayBuffer) => GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(data));
+const decodePB = (data: ArrayBuffer) => GtfsRealtimeBindings.default.transit_realtime.FeedMessage.decode(new Uint8Array(data));
 
 export const odptGtfsRtHandler: sift.Handler = async (req, params) => {
   const dataType = params.type as string;
