@@ -1,4 +1,5 @@
 import { sift, dateFnsTz } from "../../deps.ts";
+import { gettingDataFailedResponse } from "../../utils.ts";
 import { master, TrainsResponse } from "./constant.ts";
 
 export const seibuTrains: sift.Handler = async (req, params) => {
@@ -66,10 +67,7 @@ export const seibuOdptTrains: sift.Handler = async (req, params) => {
 
   const res = await fetch(`https://train.seibuapp.jp/trainfo-api/ti/v1.0/trains?lineId=${[...lineKeys.values()].join('+')}`);
   if (!res.ok) {
-    return new Response(
-      JSON.stringify({ status: 500, message: "Getting data failed." }),
-      { status: 500, headers: { "content-type": "application/json; charset=UTF-8" } }
-    );
+    return gettingDataFailedResponse;
   } else {
     const json = await res.json() as TrainsResponse;
     if (json.total === 0) {
