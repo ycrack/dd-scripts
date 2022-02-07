@@ -4,22 +4,22 @@ import { gettingDataFailedResponse } from "../../utils.ts";
 const apikey = Deno.env.get("ODPT_KEY");
 
 const availableOperators = new Map([
-  ["vehicle", ["tobus", "seibubus", "hamabus"]],
+  ["vehicle",     ["tobus", "seibubus", "hamabus"]],
   ["trip_update", ["seibubus", "hamabus"]],
-  ["alert", ["hamabus"]],
+  ["alert",       ["hamabus"]],
 ]);
 
 const odptOperators = new Map([
-  ["tobus", "ToeiBus"],
+  ["tobus",    "ToeiBus"],
   ["seibubus", "SeibuBus"],
-  ["hamabus", "YokohamaMunicipalBus"],
+  ["hamabus",  "YokohamaMunicipalBus"],
 ]);
 
 const decodePB = (data: ArrayBuffer) => GtfsRealtimeBindings.default.transit_realtime.FeedMessage.decode(new Uint8Array(data));
 
-export const odptGtfsRtHandler: sift.Handler = async (req, params) => {
-  const dataType = params.type as string;
-  const operator = params.operator as string;
+export const odptGtfsRtHandler: sift.Handler = async (_, params) => {
+  const dataType = params?.type as string;
+  const operator = params?.operator as string;
 
   switch (dataType) {
     case "alert":

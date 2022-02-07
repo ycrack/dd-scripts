@@ -2,10 +2,10 @@ import { sift, dateFnsTz } from "../../deps.ts";
 import { gettingDataFailedResponse } from "../../utils.ts";
 import { master, TrainsResponse } from "./constant.ts";
 
-export const seibuTrains: sift.Handler = async (req, params) => {
+export const seibuTrains: sift.Handler = async (_, params) => {
   const lineKeys = new Set<string>();
 
-  switch (params.line) {
+  switch (params?.line) {
     case "ike":
     case "sin":
     case "tam":
@@ -42,7 +42,7 @@ export const seibuTrains: sift.Handler = async (req, params) => {
 export const seibuOdptTrains: sift.Handler = async (req, params) => {
   const lineKeys = new Set<string>();
 
-  switch (params.line) {
+  switch (params?.line) {
     case "ike":
     case "sin":
     case "tam":
