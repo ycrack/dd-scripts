@@ -1,6 +1,6 @@
 import { sift, GtfsRealtimeBindings } from "../../deps.ts";
 
-const apikey = Deno.env.get("ODPT_TC_KEY");
+const apikey = Deno.env.get("ODPT_KEY");
 
 const availableOperators = new Map([
   ["vehicle", ["tobus", "seibubus", "hamabus"]],
@@ -32,7 +32,7 @@ export const odptGtfsRtHandler: sift.Handler = async (req, params) => {
         );
       } else {
         const odptOperatorName = odptOperators.get(operator);
-        const res = await fetch(`https://api-tokyochallenge.odpt.org/api/v4/gtfs/realtime/${odptOperatorName}${operator !== "tobus" ? `_${dataType}` : ""}?acl:consumerKey=${apikey}`);
+        const res = await fetch(`https://api.odpt.org/api/v4/gtfs/realtime/${odptOperatorName}${operator !== "tobus" ? `_${dataType}` : ""}?acl:consumerKey=${apikey}`);
         if (res.ok) {
           const feed = decodePB(await res.arrayBuffer());
           return sift.json(feed);
