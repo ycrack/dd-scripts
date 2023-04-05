@@ -1,4 +1,5 @@
-import { sift, GtfsRealtimeBindings } from "../../deps.ts";
+import GtfsRealtimeBindings from "gtfs-realtime-bindings";
+import { json, type Handler } from "sift";
 import { gettingDataFailedResponse } from "../../utils.ts";
 
 const apikey = Deno.env.get("ODPT_KEY");
@@ -15,9 +16,9 @@ const odptOperators = new Map([
   ["hamabus",  "YokohamaMunicipalBus"],
 ]);
 
-const decodePB = (data: ArrayBuffer) => GtfsRealtimeBindings.default.transit_realtime.FeedMessage.decode(new Uint8Array(data));
+const decodePB = (data: ArrayBuffer) => GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(data));
 
-export const odptGtfsRtHandler: sift.Handler = async (_, params) => {
+export const odptGtfsRtHandler: Handler = async (req, _, params) => {
   const dataType = params?.type as string;
   const operator = params?.operator as string;
 
@@ -34,7 +35,7 @@ export const odptGtfsRtHandler: sift.Handler = async (_, params) => {
       } else {
         const odptOperatorName = odptOperators.get(operator);
         const res = await fetch(`https://api.odpt.org/api/v4/gtfs/realtime/${odptOperatorName}${operator == "tobus" ? "" : `_${dataType}`}?acl:consumerKey=${apikey}`);
-        return res.ok ? sift.json(decodePB(await res.arrayBuffer())) : gettingDataFailedResponse;
+        return res.ok ? json(decodePB(await res.arrayBuffer())) : gettingDataFailedResponse;
       }
     }
     default: return new Response(

@@ -1,7 +1,10 @@
 {
   "deno.enable": true,
-  "deno.lint": true,
-  "deno.config": "deno.jsonc",
+  "deno.inlayHints.enumMemberValues.enabled": true,
+  "deno.inlayHints.functionLikeReturnTypes.enabled": true,
+  "deno.inlayHints.parameterNames.enabled": "literals",
+  "deno.inlayHints.parameterTypes.enabled": true,
+  "deno.inlayHints.variableTypes.enabled": true,
   "deno.suggest.imports.hosts": {
     "https://deno.land/": true
   }

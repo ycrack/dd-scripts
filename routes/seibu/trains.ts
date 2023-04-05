@@ -1,8 +1,9 @@
-import { sift, dateFnsTz } from "../../deps.ts";
+import dayjs from "dayjs";
+import { json as siftjson, type Handler } from "sift";
 import { gettingDataFailedResponse } from "../../utils.ts";
 import { master, TrainsResponse } from "./constant.ts";
 
-export const seibuTrains: sift.Handler = async (_, params) => {
+export const seibuTrains: Handler = async (req, _, params) => {
   const lineKeys = new Set<string>();
 
   switch (params?.line) {
@@ -35,11 +36,11 @@ export const seibuTrains: sift.Handler = async (_, params) => {
       { status: 500, headers: { "content-type": "application/json; charset=UTF-8" } }
     );
   } else {
-    return sift.json(await res.json());
+    return siftjson(await res.json());
   }
 };
 
-export const seibuOdptTrains: sift.Handler = async (req, params) => {
+export const seibuOdptTrains: Handler = async (req, _, params) => {
   const lineKeys = new Set<string>();
 
   switch (params?.line) {
@@ -71,7 +72,7 @@ export const seibuOdptTrains: sift.Handler = async (req, params) => {
   } else {
     const json = await res.json() as TrainsResponse;
     if (json.total === 0) {
-      return sift.json(json.train);
+      return siftjson(json.train);
     } else {
       const data = json.train.map(tr => {
         const convertStation = (
@@ -129,11 +130,7 @@ export const seibuOdptTrains: sift.Handler = async (req, params) => {
         const obj: { [key: string]: any } = {
           "@id": `urn:uuid:${crypto.randomUUID()}`,
           "@type": "odpt:Train",
-          "dc:date": dateFnsTz.format(
-            dateFnsTz.utcToZonedTime(new Date(res.headers.get("date")!), 'Asia/Tokyo'),
-            "yyyy-MM-dd HH:mm:ssxxx",
-            { timeZone: 'Asia/Tokyo' }
-          ).split(" ").join("T"),
+          "dc:date": dayjs(res.headers.get("date")).format("YYYY-MM-DDTHH:mm:ssZ"),
           "@context": "http://vocab.odpt.org/context_odpt.jsonld",
           "owl:sameAs": `odpt.Train:${line}.${tr.trainNo}`,
           "odpt:operator": "odpt.Operator:Seibu",
@@ -167,7 +164,7 @@ export const seibuOdptTrains: sift.Handler = async (req, params) => {
 
         return obj;
       });
-      return sift.json(data);
+      return siftjson(data);
     }
   }
 };

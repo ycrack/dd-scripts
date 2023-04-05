@@ -1,6 +1,6 @@
-import { sift } from "../deps.ts";
+import { json, type Handler } from "sift";
 
-export const headers: sift.Handler = req => {
+export const headers: Handler = (req, conn, params) => {
   const {
     cache,
     credentials,
@@ -15,17 +15,20 @@ export const headers: sift.Handler = req => {
     referrerPolicy,
   } = req;
 
+  const localAddr = conn.localAddr as Deno.NetAddr;
+  const remoteAddr = conn.remoteAddr as Deno.NetAddr;
+
   const {
     args,
     build,
     env,
-    mainModule,
     noColor,
     pid,
+    ppid,
     version
   } = Deno;
 
-  return sift.json({
+  return json({
     request: {
       cache, credentials, destination,
       headers: Object.fromEntries(headers.entries()),
@@ -37,15 +40,26 @@ export const headers: sift.Handler = req => {
       referrerPolicy,
       url,
     },
+    connInfo: {
+      server: {
+        ip: localAddr.hostname,
+        port: localAddr.port,
+      },
+      browser: {
+        ip: remoteAddr.hostname,
+        port: remoteAddr.port,
+      },
+    },
     runtime: {
       args,
       build,
       env: {
+        DENO_REGION: env.get("DENO_REGION"),
         DENO_DEPLOYMENT_ID: env.get("DENO_DEPLOYMENT_ID"),
       },
-      mainModule,
       noColor,
       pid,
+      ppid,
       version,
     }
   });
