@@ -110,6 +110,5 @@ export const odptGtfsRtHandler: Handler = async (req, _, params) => {
   }
 
   const res = await fetch(`https://api${op.public ? "-public" : ""}.odpt.org/api/v4/gtfs/realtime/${lastPath}${op.public ? "" : `?acl:consumerKey=${apikey}`}`);
-  console.log(`https://api${op.public ? "-public" : ""}.odpt.org/api/v4/gtfs/realtime/${lastPath}${op.public ? "" : `?acl:consumerKey=${apikey}`}`);
   return res.ok ? json(decodePB(await res.arrayBuffer())) : gettingDataFailedResponse;
 };
