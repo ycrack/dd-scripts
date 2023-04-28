@@ -12,17 +12,18 @@ const links: {
   al?: string;
 }[] = [
   {
-    id: "seibubus",
+    id: "keisei-transit-bus",
     public: false,
-    vp: "SeibuBus_vehicle",
-    tu: "SeibuBus_trip_update",
+    vp: "odpt_KeiseiTransitBus_AllLines_vehicle",
+    tu: "odpt_KeiseiTransitBus_AllLines_trip_update",
+    al: "odpt_KeiseiTransitBus_AllLines_alert",
   },
   {
-    id: "hamabus",
-    public: false,
-    vp: "YokohamaMunicipalBus_vehicle",
-    tu: "YokohamaMunicipalBus_trip_update",
-    al: "YokohamaMunicipalBus_alert",
+    id: "unobus",
+    public: true,
+    vp: "odpt_UnoBus_AllLines_vehicle",
+    tu: "odpt_UnoBus_AllLines_trip_update",
+    al: "odpt_UnoBus_AllLines_alert",
   },
   {
     id: "nagaibus",
@@ -44,21 +45,16 @@ const links: {
     al: "odpt_AomoriCity_AllLines_alert",
   },
   {
-    id: "unobus",
-    public: true,
-    vp: "odpt_UnoBus_AllLines_vehicle",
-    tu: "odpt_UnoBus_AllLines_trip_update",
-    al: "odpt_UnoBus_AllLines_alert",
-  },
-  {
     id: "tobus",
     public: true,
     vp: "ToeiBus",
   },
   {
-    id: "kyotobus",
+    id: "hamabus",
     public: false,
-    vp: "odpt_KyotoBus_AllLines_vehicle",
+    vp: "YokohamaMunicipalBus_vehicle",
+    tu: "YokohamaMunicipalBus_trip_update",
+    al: "YokohamaMunicipalBus_alert",
   },
   {
     id: "yokohama-subway",
@@ -67,11 +63,17 @@ const links: {
     tu: "YokohamaMunicipalTrain_trip_update",
     al: "YokohamaMunicipalTrain_alert",
   },
+  {
+    id: "seibubus",
+    public: false,
+    vp: "SeibuBus_vehicle",
+    tu: "SeibuBus_trip_update",
+  },
 ];
 
 const decodePB = (data: ArrayBuffer) => GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(data));
 
-export const odptGtfsRtHandler: Handler = async (req, _, params) => {
+export const odptGtfsRtHandler: Handler = async (_req, _conn, params) => {
   if (!params?.type || !params?.operator) {
     return new Response(
       JSON.stringify({ status: 400, message: "'type' and 'operator' parameter is required" }),
