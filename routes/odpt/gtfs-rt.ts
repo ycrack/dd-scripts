@@ -12,6 +12,13 @@ const links: {
   al?: string;
 }[] = [
   {
+    id: "kyotobus",
+    public: false,
+    vp: "odpt_KyotoBus_AllLines_vehicle",
+    tu: "odpt_KyotoBus_AllLines_trip_update",
+    al: "odpt_KyotoBus_AllLines_alert",
+  },
+  {
     id: "keisei-transit-bus",
     public: false,
     vp: "odpt_KeiseiTransitBus_AllLines_vehicle",
