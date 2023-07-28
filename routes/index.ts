@@ -9,6 +9,7 @@ import { odakyuTrains } from "./odakyu/trains.ts";
 import { odptGtfsRtHandler } from "./odpt/gtfs-rt.ts";
 import { seibuTrains, seibuOdptTrains } from "./seibu/trains.ts";
 import { shinkeiseiTrains } from "./shinkeisei/trains.ts";
+import { tokyoMetroTrains } from "./tokyometro/trains.ts";
 
 const index: Handler = _ => json(Object.keys(routes));
 
@@ -20,6 +21,7 @@ const routes: Routes = {
   "/seibu/odpt/trains/:line": seibuOdptTrains,
   "/seibu/trains/:line": seibuTrains,
   "/shinkeisei/trains": shinkeiseiTrains,
+  "/tokyometro/trains/:line": tokyoMetroTrains,
 };
 
 serve(routes);
