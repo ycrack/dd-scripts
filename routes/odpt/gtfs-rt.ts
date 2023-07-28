@@ -4,13 +4,13 @@ import { gettingDataFailedResponse } from "../../utils.ts";
 
 const apikey = Deno.env.get("ODPT_KEY");
 
-const links: {
-  id: string;
-  public: boolean;
-  vp?: string;
-  tu?: string;
-  al?: string;
-}[] = [
+const links = [
+  {
+    id: "keiobus",
+    public: false,
+    vp: "odpt_KeioBus_AllLines_vehicle",
+    tu: "odpt_KeioBus_AllLines_trip_update",
+  },
   {
     id: "kyotobus",
     public: false,
@@ -76,7 +76,13 @@ const links: {
     vp: "SeibuBus_vehicle",
     tu: "SeibuBus_trip_update",
   },
-];
+] as const satisfies readonly {
+  id: string;
+  public: boolean;
+  vp?: string;
+  tu?: string;
+  al?: string;
+}[];
 
 const decodePB = (data: ArrayBuffer) => GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(data));
 
