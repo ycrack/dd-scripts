@@ -4,12 +4,21 @@ import { gettingDataFailedResponse } from "../../utils.ts";
 
 const apikey = Deno.env.get("ODPT_KEY");
 
+// https://members-portal.odpt.org/api/v1/resources
 const links = [
   {
-    id: "keiobus",
-    public: false,
-    vp: "odpt_KeioBus_AllLines_vehicle",
-    tu: "odpt_KeioBus_AllLines_trip_update",
+    id: "unobus",
+    public: true,
+    vp: "odpt_UnoBus_AllLines_vehicle",
+    tu: "odpt_UnoBus_AllLines_trip_update",
+    al: "odpt_UnoBus_AllLines_alert",
+  },
+  {
+    id: "aomori-city",
+    public: true,
+    vp: "odpt_AomoriCity_AllLines_vehicle",
+    tu: "odpt_AomoriCity_AllLines_trip_update",
+    al: "odpt_AomoriCity_AllLines_alert",
   },
   {
     id: "kyotobus",
@@ -26,11 +35,9 @@ const links = [
     al: "odpt_KeiseiTransitBus_AllLines_alert",
   },
   {
-    id: "unobus",
+    id: "tamarin",
     public: true,
-    vp: "odpt_UnoBus_AllLines_vehicle",
-    tu: "odpt_UnoBus_AllLines_trip_update",
-    al: "odpt_UnoBus_AllLines_alert",
+    al: "odpt_NagaiTransportation_Tamarin_alert",
   },
   {
     id: "nagaibus",
@@ -40,16 +47,24 @@ const links = [
     al: "odpt_NagaiTransportation_AllLines_alert",
   },
   {
-    id: "tamarin",
-    public: true,
-    al: "odpt_NagaiTransportation_Tamarin_alert",
+    id: "keiobus",
+    public: false,
+    vp: "odpt_KeioBus_AllLines_vehicle",
+    tu: "odpt_KeioBus_AllLines_trip_update",
   },
   {
-    id: "aomoricitybus",
-    public: true,
-    vp: "odpt_AomoriCity_AllLines_vehicle",
-    tu: "odpt_AomoriCity_AllLines_trip_update",
-    al: "odpt_AomoriCity_AllLines_alert",
+    id: "kawasaki-city",
+    public: false,
+    vp: "odpt_TransportationBureau_CityOfKawasaki_AllLines_vehicle",
+    tu: "odpt_TransportationBureau_CityOfKawasaki_AllLines_trip_update",
+    al: "odpt_TransportationBureau_CityOfKawasaki_AllLines_alert",
+  },
+  {
+    id: "rinkobus",
+    public: false,
+    vp: "odpt_KawasakiTsurumiRinkoBus_allrinko_vehicle",
+    tu: "odpt_KawasakiTsurumiRinkoBus_allrinko_trip_update",
+    al: "odpt_KawasakiTsurumiRinkoBus_allrinko_alert",
   },
   {
     id: "tobus",
@@ -76,7 +91,7 @@ const links = [
     vp: "SeibuBus_vehicle",
     tu: "SeibuBus_trip_update",
   },
-] as const satisfies readonly {
+] satisfies {
   id: string;
   public: boolean;
   vp?: string;
