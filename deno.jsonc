@@ -1,7 +1,0 @@
-{
-  "compilerOptions": {
-    "allowJs": true,
-    "lib": ["dom", "dom.iterable", "dom.asynciterable", "deno.ns"]
-  },
-  "importMap": "./import_map.json"
-}

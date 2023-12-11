@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["dom", "dom.iterable", "dom.asynciterable", "deno.ns", "deno.unstable"]
+  },
+  "imports": {
+    "std/": "https://deno.land/std@0.208.0/",
+    "sift": "https://deno.land/x/sift@0.6.0/mod.ts",
+    "dayjs": "npm:dayjs@1.11.10",
+    "gtfs-realtime-bindings": "npm:gtfs-realtime-bindings@1.1.1"
+  },
+  "lock": false
+}
