@@ -1,8 +1,0 @@
-{
-  "imports": {
-    "std/": "https://deno.land/std@0.188.0/",
-    "sift": "https://deno.land/x/sift@0.6.0/mod.ts",
-    "dayjs": "https://esm.sh/dayjs@1.11.7",
-    "gtfs-realtime-bindings": "https://esm.sh/gtfs-realtime-bindings@1.1.1"
-  }
-}
