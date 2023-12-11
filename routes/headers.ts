@@ -24,8 +24,7 @@ export const headers: Handler = (req, conn, params) => {
     env,
     noColor,
     pid,
-    ppid,
-    version
+    version,
   } = Deno;
 
   return json({
@@ -59,7 +58,6 @@ export const headers: Handler = (req, conn, params) => {
       },
       noColor,
       pid,
-      ppid,
       version,
     }
   });
