@@ -7,20 +7,6 @@ const apikey = Deno.env.get("ODPT_KEY");
 // https://members-portal.odpt.org/api/v1/resources
 const links = [
   {
-    id: "unobus",
-    public: true,
-    vp: "odpt_UnoBus_AllLines_vehicle",
-    tu: "odpt_UnoBus_AllLines_trip_update",
-    al: "odpt_UnoBus_AllLines_alert",
-  },
-  {
-    id: "aomori-city",
-    public: true,
-    vp: "odpt_AomoriCity_AllLines_vehicle",
-    tu: "odpt_AomoriCity_AllLines_trip_update",
-    al: "odpt_AomoriCity_AllLines_alert",
-  },
-  {
     id: "kyotobus",
     public: false,
     vp: "odpt_KyotoBus_AllLines_vehicle",
@@ -29,7 +15,7 @@ const links = [
   },
   {
     id: "keisei-transit-bus",
-    public: false,
+    public: true,
     vp: "odpt_KeiseiTransitBus_AllLines_vehicle",
     tu: "odpt_KeiseiTransitBus_AllLines_trip_update",
     al: "odpt_KeiseiTransitBus_AllLines_alert",
@@ -47,17 +33,11 @@ const links = [
     al: "odpt_NagaiTransportation_AllLines_alert",
   },
   {
-    id: "keiobus",
-    public: false,
-    vp: "odpt_KeioBus_AllLines_vehicle",
-    tu: "odpt_KeioBus_AllLines_trip_update",
-  },
-  {
-    id: "kawasaki-city",
-    public: false,
-    vp: "odpt_TransportationBureau_CityOfKawasaki_AllLines_vehicle",
-    tu: "odpt_TransportationBureau_CityOfKawasaki_AllLines_trip_update",
-    al: "odpt_TransportationBureau_CityOfKawasaki_AllLines_alert",
+    id: "aomori-city",
+    public: true,
+    vp: "odpt_AomoriCity_AllLines_vehicle",
+    tu: "odpt_AomoriCity_AllLines_trip_update",
+    al: "odpt_AomoriCity_AllLines_alert",
   },
   {
     id: "rinkobus",
@@ -65,6 +45,33 @@ const links = [
     vp: "odpt_KawasakiTsurumiRinkoBus_allrinko_vehicle",
     tu: "odpt_KawasakiTsurumiRinkoBus_allrinko_trip_update",
     al: "odpt_KawasakiTsurumiRinkoBus_allrinko_alert",
+  },
+  {
+    id: "keiobus",
+    public: false,
+    vp: "odpt_KeioBus_AllLines_vehicle",
+    tu: "odpt_KeioBus_AllLines_trip_update",
+  },
+  {
+    id: "unobus",
+    public: true,
+    vp: "odpt_UnoBus_AllLines_vehicle",
+    tu: "odpt_UnoBus_AllLines_trip_update",
+    al: "odpt_UnoBus_AllLines_alert",
+  },
+  {
+    id: "izuhakone",
+    public: false,
+    vp: "odpt_IzuhakoneBus_IZHB_vehicle",
+    tu: "odpt_IzuhakoneBus_IZHB_trip_update",
+    al: "odpt_IzuhakoneBus_IZHB_alert",
+  },
+  {
+    id: "kawasaki-city",
+    public: false,
+    vp: "odpt_TransportationBureau_CityOfKawasaki_AllLines_vehicle",
+    tu: "odpt_TransportationBureau_CityOfKawasaki_AllLines_trip_update",
+    al: "odpt_TransportationBureau_CityOfKawasaki_AllLines_alert",
   },
   {
     id: "tobus",
