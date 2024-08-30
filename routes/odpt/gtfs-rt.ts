@@ -1,3 +1,5 @@
+import { HEADER } from "@std/http";
+import { contentType } from "@std/media-types";
 import GtfsRealtimeBindings from "gtfs-realtime-bindings";
 import { json, type Handler } from "sift";
 import { gettingDataFailedResponse } from "../../utils.ts";
@@ -7,133 +9,251 @@ const apikey = Deno.env.get("ODPT_KEY");
 // https://members-portal.odpt.org/api/v1/resources
 const links = [
   {
-    id: "kyotobus",
-    public: false,
+    id: "kyoto-bus",
+    type: "restricted",
     vp: "odpt_KyotoBus_AllLines_vehicle",
     tu: "odpt_KyotoBus_AllLines_trip_update",
     al: "odpt_KyotoBus_AllLines_alert",
   },
   {
     id: "keisei-transit-bus",
-    public: true,
+    type: "public",
     vp: "odpt_KeiseiTransitBus_AllLines_vehicle",
     tu: "odpt_KeiseiTransitBus_AllLines_trip_update",
     al: "odpt_KeiseiTransitBus_AllLines_alert",
   },
   {
     id: "tamarin",
-    public: true,
+    type: "public",
     al: "odpt_NagaiTransportation_Tamarin_alert",
   },
   {
     id: "nagaibus",
-    public: true,
+    type: "public",
     vp: "odpt_NagaiTransportation_AllLines_vehicle",
     tu: "odpt_NagaiTransportation_AllLines_trip_update",
     al: "odpt_NagaiTransportation_AllLines_alert",
   },
   {
     id: "aomori-city",
-    public: true,
+    type: "public",
     vp: "odpt_AomoriCity_AllLines_vehicle",
     tu: "odpt_AomoriCity_AllLines_trip_update",
     al: "odpt_AomoriCity_AllLines_alert",
   },
   {
-    id: "rinkobus",
-    public: false,
-    vp: "odpt_KawasakiTsurumiRinkoBus_allrinko_vehicle",
-    tu: "odpt_KawasakiTsurumiRinkoBus_allrinko_trip_update",
-    al: "odpt_KawasakiTsurumiRinkoBus_allrinko_alert",
-  },
-  {
-    id: "keiobus",
-    public: false,
-    vp: "odpt_KeioBus_AllLines_vehicle",
-    tu: "odpt_KeioBus_AllLines_trip_update",
-  },
-  {
-    id: "unobus",
-    public: true,
-    vp: "odpt_UnoBus_AllLines_vehicle",
-    tu: "odpt_UnoBus_AllLines_trip_update",
-    al: "odpt_UnoBus_AllLines_alert",
-  },
-  {
-    id: "izuhakone",
-    public: false,
+    id: "izuhakone-bus",
+    type: "restricted",
     vp: "odpt_IzuhakoneBus_IZHB_vehicle",
     tu: "odpt_IzuhakoneBus_IZHB_trip_update",
     al: "odpt_IzuhakoneBus_IZHB_alert",
   },
   {
+    id: "gunma-bus",
+    type: "public",
+    vp: "odpt_GunmaBus_AllLines_vehicle",
+    tu: "odpt_GunmaBus_AllLines_trip_update",
+    al: "odpt_GunmaBus_AllLines_alert",
+  },
+  {
+    id: "unobus",
+    type: "public",
+    vp: "odpt_UnoBus_AllLines_vehicle",
+    tu: "odpt_UnoBus_AllLines_trip_update",
+    al: "odpt_UnoBus_AllLines_alert",
+  },
+  {
+    id: "kiyobus",
+    type: "public",
+    vp: "odpt_KiyoseCity_KiyoBus_vehicle",
+    tu: "odpt_KiyoseCity_KiyoBus_trip_update",
+  },
+  {
+    id: "keio-bus",
+    type: "restricted",
+    vp: "odpt_KeioBus_AllLines_vehicle",
+    tu: "odpt_KeioBus_AllLines_trip_update",
+  },
+  {
+    id: "rinko-bus",
+    type: "restricted",
+    vp: "odpt_KawasakiTsurumiRinkoBus_allrinko_vehicle",
+    tu: "odpt_KawasakiTsurumiRinkoBus_allrinko_trip_update",
+    al: "odpt_KawasakiTsurumiRinkoBus_allrinko_alert",
+  },
+  {
+    id: "keifuku-bus",
+    type: "public",
+    vp: "odpt_KeifukuBus_keifuku_rosen_vehicle",
+    tu: "odpt_KeifukuBus_keifuku_rosen_trip_update",
+    al: "odpt_KeifukuBus_keifuku_rosen_alert",
+  },
+  {
+    id: "ncb",
+    type: "public",
+    vp: "odpt_NipponChuoBus_Maebashi_Area_vehicle",
+    tu: "odpt_NipponChuoBus_Maebashi_Area_trip_update",
+    al: "odpt_NipponChuoBus_Maebashi_Area_alert",
+  },
+  {
+    id: "ncb-okutano",
+    type: "public",
+    al: "odpt_NipponChuoBus_Okutano_Area_alert",
+  },
+  {
     id: "kawasaki-city",
-    public: false,
+    type: "restricted",
     vp: "odpt_TransportationBureau_CityOfKawasaki_AllLines_vehicle",
     tu: "odpt_TransportationBureau_CityOfKawasaki_AllLines_trip_update",
     al: "odpt_TransportationBureau_CityOfKawasaki_AllLines_alert",
   },
   {
+    id: "tokai-kisen",
+    type: "restricted",
+    al: "odpt_TokaiKisen_AllLines_alert",
+  },
+  {
+    id: "hakodate-city",
+    type: "public",
+    vp: "odpt_HakodateCity_Alllines_vehicle",
+    tu: "odpt_HakodateCity_Alllines_trip_update",
+    al: "odpt_HakodateCity_Alllines_alert",
+  },
+  {
+    id: "sentetsu-bus",
+    type: "public",
+    vp: "odpt_SentetsuBus_AllLines_vehicle",
+    tu: "odpt_SentetsuBus_AllLines_trip_update",
+    al: "odpt_SentetsuBus_AllLines_alert",
+  },
+  {
+    id: "takushoku-bus",
+    type: "restricted",
+    vp: "odpt_HokkaidoTakushokuBus_Takusyoku_regular_line_vehicle",
+    tu: "odpt_HokkaidoTakushokuBus_Takusyoku_regular_line_trip_update",
+  },
+  {
+    id: "kanto-bus",
+    type: "restricted",
+    vp: "odpt_KantoBus_AllLines_vehicle",
+    tu: "odpt_KantoBus_AllLines_trip_update",
+    al: "odpt_KantoBus_AllLines_alert",
+  },
+  {
+    id: "ntb",
+    type: "restricted",
+    vp: "odpt_NishiTokyoBus_NTB_vehicle",
+    tu: "odpt_NishiTokyoBus_NTB_trip_update",
+    al: "odpt_NishiTokyoBus_NTB_alert",
+  },
+
+  {
+    id: "toei",
+    type: "public",
+    vp: "toei_odpt_train_vehicle",
+    tu: "toei_odpt_train_trip_update",
+    al: "toei_odpt_train_alert",
+  },
+  {
+    id: "mir",
+    type: "restricted",
+    al: "mir_odpt_train_alert",
+  },
+  {
+    id: "tama-monorail",
+    type: "restricted",
+    al: "tamamonorail_odpt_train_alert",
+  },
+  {
+    id: "tokyometro",
+    type: "restricted",
+    al: "tokyometro_odpt_train_alert",
+  },
+  {
+    id: "twr",
+    type: "restricted",
+    al: "twr_odpt_train_alert",
+  },
+
+  {
     id: "tobus",
-    public: true,
+    type: "public",
     vp: "ToeiBus",
   },
   {
     id: "hamabus",
-    public: false,
+    type: "restricted",
     vp: "YokohamaMunicipalBus_vehicle",
     tu: "YokohamaMunicipalBus_trip_update",
     al: "YokohamaMunicipalBus_alert",
   },
   {
     id: "yokohama-subway",
-    public: false,
+    type: "restricted",
     vp: "YokohamaMunicipalTrain_vehicle",
     tu: "YokohamaMunicipalTrain_trip_update",
     al: "YokohamaMunicipalTrain_alert",
   },
   {
     id: "seibubus",
-    public: false,
+    type: "restricted",
     vp: "SeibuBus_vehicle",
     tu: "SeibuBus_trip_update",
   },
+
+  {
+    id: "jreast",
+    type: "challenge",
+    vp: "jreast_odpt_train_vehicle",
+    tu: "jreast_odpt_train_trip_update",
+    al: "jreis_odpt_train_alert",
+  },
+  {
+    id: "tobu",
+    type: "challenge",
+    al: "tobu_odpt_train_alert",
+  },
 ] satisfies {
   id: string;
-  public: boolean;
+  type: "public" | "restricted" | "challenge";
   vp?: string;
   tu?: string;
   al?: string;
 }[];
 
-const decodePB = (data: ArrayBuffer) => GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(data));
+const decodePB = (data: ArrayBuffer) =>
+  GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(data));
 
 export const odptGtfsRtHandler: Handler = async (_req, _conn, params) => {
   if (!params?.type || !params?.operator) {
     return new Response(
       JSON.stringify({ status: 400, message: "'type' and 'operator' parameter is required" }),
-      { status: 400, headers: { "content-type": "application/json; charset=UTF-8" } }
+      { status: 400, headers: { [HEADER.ContentType]: contentType("json") } },
     );
   }
 
   const {
     type: dataType,
-    operator
+    operator,
   } = params;
 
   if (!["vp", "tu", "al"].includes(dataType)) {
     return new Response(
       JSON.stringify({ status: 400, message: "'type' parameter must in 'vp', 'tu', 'al'." }),
-      { status: 400, headers: { "content-type": "application/json; charset=UTF-8" } }
+      { status: 400, headers: { [HEADER.ContentType]: contentType("json") } },
     );
   }
 
-  const op = links.find(o => operator == o.id);
+  const op = links.find((o) => operator == o.id);
 
   if (!op) {
     return new Response(
-      JSON.stringify({ status: 400, message: "Specified 'operator' not found.", available: links.map(o => o.id) }),
-      { status: 400, headers: { "content-type": "application/json; charset=UTF-8" } }
+      JSON.stringify({
+        status: 400,
+        message: "Specified 'operator' not found.",
+        available: links.map((o) => o.id),
+      }),
+      { status: 400, headers: { [HEADER.ContentType]: contentType("json") } },
     );
   }
 
@@ -141,11 +261,18 @@ export const odptGtfsRtHandler: Handler = async (_req, _conn, params) => {
 
   if (!lastPath) {
     return new Response(
-      JSON.stringify({ status: 400, message: `This dataType of operator (${operator}) is not supported.` }),
-      { status: 400, headers: { "content-type": "application/json; charset=UTF-8" } }
+      JSON.stringify({
+        status: 400,
+        message: `This dataType of operator (${operator}) is not supported.`,
+      }),
+      { status: 400, headers: { [HEADER.ContentType]: contentType("json") } },
     );
   }
 
-  const res = await fetch(`https://api${op.public ? "-public" : ""}.odpt.org/api/v4/gtfs/realtime/${lastPath}${op.public ? "" : `?acl:consumerKey=${apikey}`}`);
+  const res = await fetch(
+    `https://api${
+      op.type === "public" ? "-public" : op.type === "challenge" ? "-challenge2024" : ""
+    }.odpt.org/api/v4/gtfs/realtime/${lastPath}${op.type === "public" ? "" : `?acl:consumerKey=${apikey}`}`,
+  );
   return res.ok ? json(decodePB(await res.arrayBuffer())) : gettingDataFailedResponse;
 };

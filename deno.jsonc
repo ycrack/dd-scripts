@@ -4,10 +4,15 @@
     "lib": ["dom", "dom.iterable", "dom.asynciterable", "deno.ns", "deno.unstable"]
   },
   "imports": {
-    "std/": "https://deno.land/std@0.208.0/",
+    "#/": "./",
+    "@/": "./src/",
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.1",
+    "@std/http": "jsr:@std/http@^1.0.4",
+    "@std/media-types": "jsr:@std/media-types@^1.0.3",
+    "gtfs-realtime-bindings": "npm:gtfs-realtime-bindings@^1.1.1",
     "sift": "https://deno.land/x/sift@0.6.0/mod.ts",
-    "dayjs": "npm:dayjs@1.11.10",
-    "gtfs-realtime-bindings": "npm:gtfs-realtime-bindings@1.1.1"
+  },
+  "tasks": {
   },
   "lock": false
 }

@@ -2,7 +2,7 @@ import {
   json, serve,
   type Handler, type Routes
 } from "sift";
-import "std/dotenv/load.ts";
+import "@std/dotenv/load";
 
 import { headers } from "./headers.ts";
 import { odakyuTrains } from "./odakyu/trains.ts";
