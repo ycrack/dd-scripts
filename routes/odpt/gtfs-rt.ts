@@ -4,8 +4,6 @@ import GtfsRealtimeBindings from "gtfs-realtime-bindings";
 import { json, type Handler } from "sift";
 import { gettingDataFailedResponse } from "../../utils.ts";
 
-const apikey = Deno.env.get("ODPT_KEY");
-
 // https://members-portal.odpt.org/api/v1/resources
 const links = [
   {
@@ -270,9 +268,8 @@ export const odptGtfsRtHandler: Handler = async (_req, _conn, params) => {
   }
 
   const res = await fetch(
-    `https://api${
-      op.type === "public" ? "-public" : op.type === "challenge" ? "-challenge2024" : ""
-    }.odpt.org/api/v4/gtfs/realtime/${lastPath}${op.type === "public" ? "" : `?acl:consumerKey=${apikey}`}`,
+    `https://api${op.type === "public" ? "-public" : op.type === "challenge" ? "-challenge2024" : ""
+    }.odpt.org/api/v4/gtfs/realtime/${lastPath}${op.type === "public" ? "" : `?acl:consumerKey=${Deno.env.get(op.type === "challenge" ? "ODPT_CHALLENGE_KEY" : "ODPT_KEY")}`}`,
   );
   return res.ok ? json(decodePB(await res.arrayBuffer())) : gettingDataFailedResponse;
 };
