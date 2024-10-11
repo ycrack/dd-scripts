@@ -1,29 +1,17 @@
-import { HEADER } from "@std/http";
+import { HEADER } from "@std/http/unstable-header";
 import { contentType } from "@std/media-types";
 import GtfsRealtimeBindings from "gtfs-realtime-bindings";
 import { json, type Handler } from "sift";
 import { gettingDataFailedResponse } from "../../utils.ts";
 
-// https://members-portal.odpt.org/api/v1/resources
 const links = [
+  // https://members-portal.odpt.org/api/v1/resources
   {
     id: "kyoto-bus",
     type: "restricted",
     vp: "odpt_KyotoBus_AllLines_vehicle",
     tu: "odpt_KyotoBus_AllLines_trip_update",
     al: "odpt_KyotoBus_AllLines_alert",
-  },
-  {
-    id: "keisei-transit-bus",
-    type: "public",
-    vp: "odpt_KeiseiTransitBus_AllLines_vehicle",
-    tu: "odpt_KeiseiTransitBus_AllLines_trip_update",
-    al: "odpt_KeiseiTransitBus_AllLines_alert",
-  },
-  {
-    id: "tamarin",
-    type: "public",
-    al: "odpt_NagaiTransportation_Tamarin_alert",
   },
   {
     id: "nagaibus",
@@ -67,12 +55,6 @@ const links = [
     tu: "odpt_KiyoseCity_KiyoBus_trip_update",
   },
   {
-    id: "keio-bus",
-    type: "restricted",
-    vp: "odpt_KeioBus_AllLines_vehicle",
-    tu: "odpt_KeioBus_AllLines_trip_update",
-  },
-  {
     id: "rinko-bus",
     type: "restricted",
     vp: "odpt_KawasakiTsurumiRinkoBus_allrinko_vehicle",
@@ -87,6 +69,13 @@ const links = [
     al: "odpt_KeifukuBus_keifuku_rosen_alert",
   },
   {
+    id: "keisei-transit-bus",
+    type: "public",
+    vp: "odpt_KeiseiTransitBus_AllLines_vehicle",
+    tu: "odpt_KeiseiTransitBus_AllLines_trip_update",
+    al: "odpt_KeiseiTransitBus_AllLines_alert",
+  },
+  {
     id: "ncb",
     type: "public",
     vp: "odpt_NipponChuoBus_Maebashi_Area_vehicle",
@@ -99,16 +88,10 @@ const links = [
     al: "odpt_NipponChuoBus_Okutano_Area_alert",
   },
   {
-    id: "kawasaki-city",
+    id: "keio-bus",
     type: "restricted",
-    vp: "odpt_TransportationBureau_CityOfKawasaki_AllLines_vehicle",
-    tu: "odpt_TransportationBureau_CityOfKawasaki_AllLines_trip_update",
-    al: "odpt_TransportationBureau_CityOfKawasaki_AllLines_alert",
-  },
-  {
-    id: "tokai-kisen",
-    type: "restricted",
-    al: "odpt_TokaiKisen_AllLines_alert",
+    vp: "odpt_KeioBus_AllLines_vehicle",
+    tu: "odpt_KeioBus_AllLines_trip_update",
   },
   {
     id: "hakodate-city",
@@ -116,13 +99,6 @@ const links = [
     vp: "odpt_HakodateCity_Alllines_vehicle",
     tu: "odpt_HakodateCity_Alllines_trip_update",
     al: "odpt_HakodateCity_Alllines_alert",
-  },
-  {
-    id: "sentetsu-bus",
-    type: "public",
-    vp: "odpt_SentetsuBus_AllLines_vehicle",
-    tu: "odpt_SentetsuBus_AllLines_trip_update",
-    al: "odpt_SentetsuBus_AllLines_alert",
   },
   {
     id: "takushoku-bus",
@@ -138,11 +114,30 @@ const links = [
     al: "odpt_KantoBus_AllLines_alert",
   },
   {
+    id: "tokai-kisen",
+    type: "restricted",
+    al: "odpt_TokaiKisen_AllLines_alert",
+  },
+  {
     id: "ntb",
     type: "restricted",
     vp: "odpt_NishiTokyoBus_NTB_vehicle",
     tu: "odpt_NishiTokyoBus_NTB_trip_update",
     al: "odpt_NishiTokyoBus_NTB_alert",
+  },
+  {
+    id: "sentetsu-bus",
+    type: "public",
+    vp: "odpt_SentetsuBus_AllLines_vehicle",
+    tu: "odpt_SentetsuBus_AllLines_trip_update",
+    al: "odpt_SentetsuBus_AllLines_alert",
+  },
+  {
+    id: "kawasaki-city",
+    type: "restricted",
+    vp: "odpt_TransportationBureau_CityOfKawasaki_AllLines_vehicle",
+    tu: "odpt_TransportationBureau_CityOfKawasaki_AllLines_trip_update",
+    al: "odpt_TransportationBureau_CityOfKawasaki_AllLines_alert",
   },
 
   {
@@ -199,6 +194,7 @@ const links = [
     tu: "SeibuBus_trip_update",
   },
 
+  // challenge
   {
     id: "jreast",
     type: "challenge",
@@ -209,6 +205,8 @@ const links = [
   {
     id: "tobu",
     type: "challenge",
+    vp: "tobu_odpt_train_vehicle",
+    tu: "tobu_odpt_train_trip_update",
     al: "tobu_odpt_train_alert",
   },
 ] satisfies {
